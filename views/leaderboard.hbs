@@ -1,0 +1,49 @@
+<div
+  class="pb-5 pt-5 text-white-50 text-center"
+  style="background-color: slategrey;"
+>
+  <h1>
+    HERE IS
+    <span style="color: var(--main-color);">
+      {{testName}}'s
+    </span>
+    QUIZ RESULTS
+    <i class="fa-solid fa-fire-burner"></i>
+  </h1>
+  <p>
+    this is the leaderboard from higher to lower
+  </p>
+</div>
+
+<div class="row pt-5 pb-5">
+  <div class="col-md-3"></div>
+  <div class="col-md-6">
+    {{#if condition}}
+      <table class="table" style="text-align: center;">
+        <thead>
+          <tr class="table-secondary">
+            <th scope="col">name</th>
+            <th scope="col">score from {{number}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each users}}
+            <tr class="table-light">
+              <td>{{this.name}}</td>
+              <td>{{this.score}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <alert class="alert-success">
+        <h1> You got score : {{score}} of {{number}}</h1>
+        <p>
+          you are better than
+          {{per}}% from other people are taking this quiz
+        </p>
+      </alert>
+    {{/if}}
+  </div>
+  <div class="col-md-3"></div>
+</div>

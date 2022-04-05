@@ -1,0 +1,47 @@
+<div class="row text-center">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 pt-5">
+    {{#each msg}}
+      <div class="alert alert-danger">
+        {{this}}
+      </div>
+    {{/each}}
+    {{#each puplishedTests}}
+      <div class="card rounded-pill">
+        <div class="card-body">
+          <h3 class="card-title">
+            {{this.testName}}
+          </h3>
+          <p class="card-text">
+            {{#if this.secret.is}}
+              <div class="alert alert-warning rounded-pill">
+                this quiz is private
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <form action="/test" method="get">
+                <input
+                  class="form-control"
+                  placeholder="enter quiz password"
+                  name="password"
+                />
+                <input type="hidden" name="name" value={{this.testName}} />
+                <button class="btn btn-warning mt-3 rounded-pill" type="submit">
+                  take the quiz
+                  <i class="fa-solid fa-lock-open"></i>
+                </button>
+              </form>
+            {{else}}
+              <form action="/test" method="get">
+                <input type="hidden" name="name" value={{this.testName}} />
+                <button class="btn btn-success mt-3 rounded-pill" type="submit">
+                  take the quiz
+                  <i class="fa-solid fa-square-up-right"></i>
+                </button>
+              </form>
+            {{/if}}
+          </p>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

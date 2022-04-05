@@ -1,0 +1,91 @@
+<div
+  class="pb-5 pt-5 text-white-50 text-center"
+  style="background-color: slategrey;"
+>
+  <h1>
+    HERE IS
+    <span style="color: var(--main-color);">
+      {{test.testName}}'s
+    </span>
+    QUIZ STATISTICS
+    <i class="fa-solid fa-fire-burner"></i>
+  </h1>
+</div>
+
+<div class="row pt-5 pb-5">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 text-center">
+    <div class="alert alert-success">
+      Quiz ID :
+      {{test._id}}
+    </div>
+    <h1> Results </h1>
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th scope="col">name</th>
+          <th scope="col">score from {{test.number}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each test.users}}
+          <tr class="table-light">
+            <td>{{this.name}}</td>
+            <td>{{this.score}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <h1> Questions Statistics </h1>
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th scope="col">Question Title</th>
+          <th scope="col" colspan="4">answers</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each arr}}
+          <tr class="table-light">
+            <td>{{this.title}}</td>
+            {{#each this.answers}}
+              <td>{{this.content}}</td>
+            {{/each}}
+          </tr>
+          <tr class="table-light">
+            <td>answers for each option</td>
+            {{#each this.answers}}
+              {{#if this.isTrue}}
+                <td class="text-success">
+                  {{this.ansd}}</td>
+              {{else}}
+                <td class="text-danger">
+                  {{this.ansd}}</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <h1> Settings </h1>
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th scope="col"> Settings </th>
+          <th scope="col"> status </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-light">
+          <td> Quiz Password </td>
+          <td>{{test.secret.password}}</td>
+        </tr>
+        <tr class="table-light">
+          <td> puplic results </td>
+          <td>{{test.leaderboard}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-3"></div>
+</div>

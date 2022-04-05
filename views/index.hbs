@@ -1,0 +1,72 @@
+<div
+  class="pb-5 pt-5 text-white-50 text-center"
+  style="background-color: slategrey;"
+>
+  <h1>
+    WELCOME TO
+    <span style="color: var(--main-color);">
+      {{testName}}
+    </span>
+    QUIZ
+    <i class="fa-solid fa-fire-burner"></i>
+  </h1>
+  <p>
+    Enter your name then choose the correct answer for each question
+  </p>
+</div>
+
+<div class="text-center" style="background-color: rgb(26, 26, 41);">
+  <div class="container">
+    <div class="row pt-5 pb-5 text-center">
+      <div class="col-md-12">
+        <form action="/post" method="post">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">
+                Enter your name
+              </h5>
+              <p class="card-text">
+                <input
+                  class="form-control"
+                  placeholder="name ..."
+                  name="name"
+                  required
+                />
+              </p>
+            </div>
+          </div>
+          <br />
+          {{#each arr}}
+            <div class="card text-center" style="margin-top: 2%;">
+              {{#if this.isImg}}
+                <img src={{this.img}} class="card-img" />
+              {{else}}
+
+              {{/if}}
+              <br />
+              <h5 class="card-title">{{this.title}}</h5>
+              <p class="card-text">
+              </p>
+              <select
+                name={{this._id}}
+                class="form-control"
+                style="margin: 0 10%; width: 80%;"
+              >
+                <option value="">click here and choose the correct answer</option>
+                {{#each this.answers}}
+                  <option class="form-control">{{this.content}}</option>
+                {{/each}}
+              </select>
+              <br />
+            </div>
+          {{/each}}
+          <center style="margin: 5%;">
+            <input type="hidden" name="testName" value={{testName}} />
+            <button type="submit" class="btn btn-primary">submit
+            </button>
+          </center>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

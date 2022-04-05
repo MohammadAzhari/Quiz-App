@@ -1,0 +1,236 @@
+<div
+  class="pb-5 pt-5 text-white-50 text-center"
+  style="background-color: slategrey;"
+>
+  <h1>
+    EDIT YOUR QUIZ
+    <i class="fa-solid fa-gear"></i>
+  </h1>
+</div>
+
+<div class="maincolor">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6 pt-5 pb-5">
+        <form action="/adminadd" method="post">
+          <div class="card">
+            <input type="hidden" name="testName" value={{testName}} />
+            <div class="card-body">
+              <h5 class="card-title">
+                Enter question title
+              </h5>
+              <p class="card-text">
+                <input
+                  class="form-control"
+                  placeholder="question title"
+                  name="title"
+                    required
+                />
+              </p>
+              <h5 class="card-title">
+                chick the box if there is image with question
+              </h5>
+              <p class="card-text">
+                <input type="checkbox" name="isImg" />
+              </p>
+              <h5 class="card-title">
+                Enter image path
+              </h5>
+              <p class="card-text">
+                <input
+                  class="form-control"
+                  placeholder="image path"
+                  name="img"
+                />
+              </p>
+              <h5 class="card-title">
+                Enter correct answer
+              </h5>
+              <p class="card-text">
+                <input
+                  class="form-control"
+                  placeholder="correct answer"
+                  name="correct"
+                    required
+                />
+              </p>
+              <h5 class="card-title">
+                Enter wrong answers
+              </h5>
+              <p class="card-text">
+                <input
+                  class="form-control"
+                  placeholder="wrong answer"
+                  name="optionA"
+                    required
+                />
+                <input
+                  class="form-control"
+                  placeholder="wrong answer"
+                  name="optionB"
+                    
+                />
+                <input
+                  class="form-control"
+                  placeholder="wrong answer"
+                  name="optionC"
+                />
+              </p>
+            </div>
+            <center>
+              <button type="submit" class="btn btn-primary">add Question
+                <i class="fa-solid fa-circle-plus"></i>
+              </button>
+            </center>
+            <br />
+          </div>
+        </form>
+        {{#each list}}
+          <div class="card text-center" style="margin-top: 2%;">
+            <h5 class="card-title">{{this.title}}</h5>
+
+            <div class="card text-center">
+              <form action="/admindelete" method="post">
+                <input type="hidden" name="testName" value={{this.testName}} />
+                <input type="hidden" name="id" value={{this._id}} />
+                <button type="submit" class="btn btn-danger">delete Question
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        {{/each}}
+        <div
+          class="card text-center mt-3 pt-3"
+          style="background-color: slategrey;"
+        >
+          <div class="card-title">
+            <h2 class="card-text"> Quiz Settings : </h2>
+          </div>
+          <div class="card-body">
+            
+
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active rounded-pill border-warning text-warning"
+                    id="home-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#home"
+                    type="button"
+                    role="tab"
+                    aria-controls="home"
+                    aria-selected="true"
+                  >Quiz Statistics</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link rounded-pill border-warning text-warning"
+                    id="profile-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#profile"
+                    type="button"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >Private Quiz</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link text-warning rounded-pill border-warning"
+                    style="color:"
+                    id="contact-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#contact"
+                    type="button"
+                    role="tab"
+                    aria-controls="contact"
+                    aria-selected="false"
+                  >Puplic Quiz</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link text-warning rounded-pill border-warning"
+                    style="color:"
+                    id="contact-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#s"
+                    type="button"
+                    role="tab"
+                    aria-controls="contact"
+                    aria-selected="false"
+                  >Results</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="home"
+                  role="tabpanel"
+                  aria-labelledby="home-tab"
+                >
+                <a href="/stat/{{id}}" class="btn btn-success mt-3">
+                  GO TO QUIZ STATISTICS  <i class="fa-solid fa-chart-line"></i>
+                </a>
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="profile"
+                  role="tabpanel"
+                  aria-labelledby="profile-tab"
+                >
+                {{#if con}}
+                <form action="/settings" method="post">
+                <input
+                    type="text"
+                    class="form-control mt-3"
+                    name="password"
+                    placeholder="enter Quiz key"
+                  />
+                  <input type="hidden" name="id" value={{id}} />
+              <button type="submit" class="btn btn-warning rounded-pill">
+                save
+              </button>
+                  </form>
+                {{else}}
+                  <div class="alert alert-warning mt-3">this quiz is already private</div>
+                {{/if}}
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="contact"
+                  role="tabpanel"
+                  aria-labelledby="contact-tab"
+                >
+                {{#if con}}
+                  <div class="alert alert-warning mt-3">this quiz is already puplic</div>
+                {{else}}
+                <form action="/puplic" method="post"></form>
+                <input type="hidden" name="id" value={{id}} />
+                  <button type="submit" class="btn btn-info"> Make this test puplic
+                </button>
+                {{/if}}
+              </div>
+              <div
+                  class="tab-pane fade"
+                  id="s"
+                  role="tabpanel"
+                  aria-labelledby="contact-tab"
+                >
+                <form action="/setleader" method="post">
+                <input type="hidden" name="id" value={{id}} />
+                  <select name="stat" class="form-control mt-3">
+                    <option class="form-control">Results Type</option>
+                    <option class="form-control">leaderboard</option>
+                    <option class="form-control">personal</option>
+                  </select>
+                  <button type="submit" class="btn btn-warning">save</button>
+                </form>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
