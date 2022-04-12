@@ -3,20 +3,31 @@ const asyncHandler = require("express-async-handler");
 var router = express.Router();
 const Questions = require("../models/questions");
 const Test = require("../models/test");
-const multer = require("multer");
-const path = require("path");
-const { notEqual } = require("assert");
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "../public/images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage });
+
 let flashMessage = [];
 
+//home :
+router.get("/", (req, res, next) => {
+  res.render("home");
+});
+
+//take a test :
+router.get("/alltests", async (req, res, next) => {
+  let msg = flashMessage;
+  flashMessage = [];
+  const alltests = await Test.find();
+  puplishedTests = [];
+  if (alltests.length > 0) {
+    await alltests.forEach((test) => {
+      if (test.number > 0) {
+        puplishedTests.push(test);
+      }
+    });
+  }
+  res.render("alltests", { puplishedTests, msg });
+});
+
+//enter a test :
 router.get(
   "/test",
   asyncHandler(async (req, res, next) => {
@@ -36,35 +47,7 @@ router.get(
   })
 );
 
-router.get("/", (req, res, next) => {
-  res.render("home");
-});
-
-router.get("/alltests", async (req, res, next) => {
-  let msg = flashMessage;
-  flashMessage = [];
-  const alltests = await Test.find();
-  puplishedTests = [];
-  if (alltests.length > 0) {
-    await alltests.forEach((test) => {
-      if (test.number > 0) {
-        puplishedTests.push(test);
-      }
-    });
-  }
-  res.render("alltests", { puplishedTests, msg });
-});
-
-function newTest(req, res) {
-  let it = {
-    testName: req.query.name,
-    number: 0,
-  };
-  Test.create(it).then((r) => {
-    res.render("createtest", { condition: true, id: r._id });
-  });
-}
-
+//create a test :
 router.get("/createtest", async (req, res, next) => {
   let msg = flashMessage;
   flashMessage = [];
@@ -88,7 +71,18 @@ router.get("/createtest", async (req, res, next) => {
     }
   }
 });
+//helpful function :
+function newTest(req, res) {
+  let it = {
+    testName: req.query.name,
+    number: 0,
+  };
+  Test.create(it).then((r) => {
+    res.render("createtest", { condition: true, id: r._id });
+  });
+}
 
+//test settings :
 router.get("/edittest", async (req, res, next) => {
   let test = await Test.findById(req.query.id);
   let list = await Questions.find({ testName: test.testName });
@@ -100,6 +94,7 @@ router.get("/edittest", async (req, res, next) => {
   });
 });
 
+//post question :
 router.post(
   "/adminadd",
   asyncHandler(async (req, res, next) => {
@@ -152,6 +147,7 @@ router.post(
   })
 );
 
+//delete question :
 router.post(
   "/admindelete",
   asyncHandler(async (req, res, next) => {
@@ -173,6 +169,7 @@ router.post(
   })
 );
 
+//post tester :
 router.post(
   "/post",
   asyncHandler(async (req, res, next) => {
@@ -210,17 +207,7 @@ router.post(
   })
 );
 
-function bubbleSort(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = 0; j < arr.length - i - 1; j++) {
-      if (arr[j + 1].score > arr[j].score) {
-        [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
-      }
-    }
-  }
-  return arr;
-}
-
+//result
 router.get(
   "/leaderboard/:testname/:name",
   asyncHandler(async (req, res, next) => {
@@ -251,7 +238,19 @@ router.get(
     }
   })
 );
+//helpful function :
+function bubbleSort(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < arr.length - i - 1; j++) {
+      if (arr[j + 1].score > arr[j].score) {
+        [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
+      }
+    }
+  }
+  return arr;
+}
 
+// settings posts :
 router.post("/settings", (req, res, next) => {
   Test.findByIdAndUpdate(req.body.id, {
     secret: { is: true, password: req.body.password },
@@ -260,7 +259,6 @@ router.post("/settings", (req, res, next) => {
     res.redirect(`edittest?id=${req.body.id}`);
   });
 });
-
 router.post("/setleader", async (req, res, next) => {
   if (req.body.stat == "personal")
     await Test.findByIdAndUpdate(req.body.id, { leaderboard: false });
@@ -268,7 +266,6 @@ router.post("/setleader", async (req, res, next) => {
     await Test.findByIdAndUpdate(req.body.id, { leaderboard: true });
   res.redirect(`edittest?id=${req.body.id}`);
 });
-
 router.post("/puplic", (req, res, next) => {
   Test.findByIdAndUpdate(req.body.id, {
     secret: { is: false, password: "" },
@@ -278,30 +275,13 @@ router.post("/puplic", (req, res, next) => {
   });
 });
 
+// stats :
 router.get("/stat/:id", async (req, res, next) => {
   let test = await Test.findById(req.params.id);
   let arr = await Questions.find({ testName: test.testName });
   res.render("stat", {
     test,
     arr,
-  });
-});
-
-// here my own function to test the code
-router.get("/log", async (req, res) => {
-  let test = await Test.find();
-  let questions = await Questions.find();
-  console.log(test);
-  console.log(questions);
-  await test.forEach(async (r) => {
-    await r.users.forEach((rr) => {
-      console.log(rr);
-    });
-  });
-  await questions.forEach(async (r) => {
-    await r.answers.forEach((rr) => {
-      console.log(rr);
-    });
   });
 });
 
